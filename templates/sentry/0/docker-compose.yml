@@ -11,7 +11,7 @@ sentry-postgres:
   log_opt: {}
   image: postgres:9.5.3
   stdin_open: true
-sentry-celery-beat:
+sentry-cron:
   environment:
     SENTRY_EMAIL_HOST: ${sentry_email_host}
     SENTRY_EMAIL_PASSWORD: ${sentry_email_password}
@@ -25,10 +25,10 @@ sentry-celery-beat:
     io.rancher.container.pull_image: always
   tty: true
   command:
-  - celery
-  - beat
+  - run
+  - cron
   log_opt: {}
-  image: sentry:8.4.1
+  image: sentry:8.5.0
   links:
   - sentry-postgres:postgres
   - sentry-redis:redis
@@ -60,14 +60,14 @@ sentry:
   command:
   - /bin/bash
   - -c
-  - sentry upgrade --noinput && sentry createuser --email ${sentry_inital_user_email} --password ${sentry_inital_user_password} --superuser && /docker-entrypoint.sh run web || /docker-entrypoint.sh run web
+  - sentry upgrade --noinput && sentry createuser --email ${sentry_inital_user_email} --password ${sentry_inital_user_password} --superuser && /entrypoint.sh run web || /entrypoint.sh run web
   log_opt: {}
-  image: sentry:8.4.1
+  image: sentry:8.5.0
   links:
   - sentry-postgres:postgres
   - sentry-redis:redis
   stdin_open: true
-sentry-celery-worker:
+sentry-worker:
   environment:
     SENTRY_EMAIL_HOST: ${sentry_email_host}
     SENTRY_EMAIL_PASSWORD: ${sentry_email_password}
@@ -81,10 +81,10 @@ sentry-celery-worker:
     io.rancher.container.pull_image: always
   tty: true
   command:
-  - celery
+  - run
   - worker
   log_opt: {}
-  image: sentry:8.4.1
+  image: sentry:8.5.0
   links:
   - sentry-postgres:postgres
   - sentry-redis:redis

@@ -1,6 +1,6 @@
 .catalog:
   name: Sentry
-  version: 8.4.1
+  version: 8.5.0
   description: Sentry is a realtime event logging and aggregation platform
 
   questions:
@@ -26,7 +26,7 @@
       type: "password"
       required: true
       label: "SENTRY_INITAL_USER_PASSWORD"
-      description: "The initial superuser password"
+      description: "The initial superuser password. Please use a simple intial password and change it afterwards in the Sentry interface"
 
     - variable: "sentry_server_email"
       type: "string"
